@@ -5,6 +5,8 @@
 
 //ldoc
 /**
+ * # Finite volume solver
+ *
  * ## Interface
  *
  * ### Physics function types
@@ -61,6 +63,7 @@ typedef struct central2d_t {
  * For the most part, we treat the `central2d_t` as a read-only
  * structure.  The exceptions are the constructor and destructor
  * functions.
+ *
  */
 central2d_t* central2d_init(float w, float h, int nx, int ny,
                             int nfield, flux_t flux, speed_t speed,
@@ -73,6 +76,7 @@ void central2d_free(central2d_t* sim);
  * function.  Here `k` is the field index, and `(ix,iy)` are the
  * (zero-based) cell index, where cell `(0,0)` is a corner
  * real (non-ghost) cell.
+ *
  */
 int  central2d_offset(central2d_t* sim, int k, int ix, int iy);
 
@@ -84,6 +88,7 @@ int  central2d_offset(central2d_t* sim, int k, int ix, int iy);
  * taken, determined by the CFL restriction and by the requirement
  * that we always take steps in multiples of two so that we end
  * at the reference grid.
+ *
  */
 int central2d_run(central2d_t* sim, float tfinal);
 
@@ -99,6 +104,7 @@ int central2d_run(central2d_t* sim, float tfinal);
  * going to use periodic BCs.  But I want to leave the interface function
  * public in the eventuality that I might swap in a function pointer
  * for applying the BCs.
+ *
  */
 void central2d_periodic(float* u, int nx, int ny, int ng, int nfield);
 

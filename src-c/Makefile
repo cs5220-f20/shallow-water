@@ -19,7 +19,7 @@ stepper.o: stepper.c
 # ===
 # Documentation
 
-shallow.md: stepper.h stepper.c shallow2d.h shallow2d.c ldriver.c
+shallow.md: shallow2d.h shallow2d.c stepper.h stepper.c ldriver.c
 	ldoc $^ -o $@
 
 # ===
