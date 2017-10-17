@@ -1,11 +1,11 @@
-LANG=c
+SRC=src-c
 PYTHON=python
 
 .PHONY: src-c/lshallow
 .PHONY: src-c++/lshallow
 
-src-$(LANG)/lshallow:
-	( cd src-$(LANG) ; make )
+$(SRC)/lshallow:
+	( cd $(SRC) ; make )
 
 # ===
 # Run small or big version
@@ -13,8 +13,8 @@ src-$(LANG)/lshallow:
 .PHONY: run big
 run: dam_break.gif
 
-big: src-$(LANG)/lshallow
-	src-$(LANG)/lshallow tests.lua dam 1000
+big: $(SRC)/lshallow
+	$(SRC)/lshallow tests.lua dam 1000
 
 # ===
 # Generate visualizations (animated GIF or MP4)
@@ -34,21 +34,21 @@ wave.mp4: wave.out
 # ===
 # Generate output files
 
-dam_break.out: src-$(LANG)/lshallow
-	src-$(LANG)/lshallow tests.lua dam
+dam_break.out: $(SRC)/lshallow
+	$(SRC)/lshallow tests.lua dam
 
-wave.out: src-$(LANG)/lshallow
-	src-$(LANG)/lshallow tests.lua wave
+wave.out: $(SRC)/lshallow
+	$(SRC)/lshallow tests.lua wave
 
 # ===
 # Generate documentation
 
-shallow.pdf: doc/jt-scheme.md src-$(LANG)/shallow.md
+shallow.pdf: doc/jt-scheme.md $(SRC)/shallow.md
 	pandoc --toc $^ -o $@
 
-.PHONY: src-$(LANG)/shallow.md
-src-$(LANG)/shallow.md:
-	( cd src-$(LANG) ; make shallow.md )
+.PHONY: $(SRC)/shallow.md
+$(SRC)/shallow.md:
+	( cd $(SRC) ; make shallow.md )
 
 # ===
 # Clean up
