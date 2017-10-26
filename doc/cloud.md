@@ -83,7 +83,7 @@ To run it, type in **chmod a+x configure-vm.sh; sudo ./configure-vm.sh**. You wi
 * Log out and log back in. CUDA, Make, and the SciPy stack should be installed. 
 * To check the CUDA installation, type in **nvidia-smi**, which should output
 information about the GPU on your machine (the GPU should be a Tesla K80)
-* To check the Make and SciPy installations, simply type in **make shallow**. This will run the shallow waters code and output
+* To check the Make and SciPy installations, simply type in **make lshallow** in the c or c++ source directories. Copy the executable up a level, and then type **make wave.out**. This will run the shallow waters code and output
 a video file. 
 * When you are not using the instance, make sure to stop it so that you are not billed for time that you are not using. THIS IS VERY IMPORTANT. To do so, check the box next to *CS5220-instance* and click the stop button. You can restart the instance whenever you are ready to use it. 
 
