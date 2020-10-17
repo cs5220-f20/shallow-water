@@ -35,7 +35,7 @@ void shallow2dv_flux(float* restrict fh,
     memcpy(gh, hv, ncell * sizeof(float));
     for (int i = 0; i < ncell; ++i) {
         float hi = h[i], hui = hu[i], hvi = hv[i];
-        float inv_h = 1/hi;
+        float inv_h = 1.0f/hi;
         fhu[i] = hui*hui*inv_h + (0.5f*g)*hi*hi;
         fhv[i] = hui*hvi*inv_h;
         ghu[i] = hui*hvi*inv_h;
