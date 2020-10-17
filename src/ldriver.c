@@ -102,53 +102,6 @@ void viz_frame(FILE* fp, central2d_t* sim, int vskip)
  * cheap to call a Lua function for every point in a mesh
  * (less so for Python, though it probably won't make much difference).
  *
- * ### Lua helpers
- *
- * We want to be able to get numbers and strings with a default value
- * when nothing is specified.  Lua 5.3 has this as a built-in, I think,
- * but the following codes are taken from earlier versions of Lua.
- */
-
-double lget_number(lua_State* L, const char* name, double x)
-{
-    lua_getfield(L, 1, name);
-    if (lua_type(L, -1) != LUA_TNIL) {
-        if (lua_type(L, -1) != LUA_TNUMBER)
-            luaL_error(L, "Expected %s to be a number", name);
-        x = lua_tonumber(L, -1);
-    }
-    lua_pop(L, 1);
-    return x;
-}
-
-
-int lget_int(lua_State* L, const char* name, int x)
-{
-    lua_getfield(L, 1, name);
-    if (lua_type(L, -1) != LUA_TNIL) {
-        if (lua_type(L, -1) != LUA_TNUMBER)
-            luaL_error(L, "Expected %s to be a number", name);
-        x = lua_tointeger(L, -1);
-    }
-    lua_pop(L, 1);
-    return x;
-}
-
-
-const char* lget_string(lua_State* L, const char* name, const char* x)
-{
-    lua_getfield(L, 1, name);
-    if (lua_type(L, -1) != LUA_TNIL) {
-        if (lua_type(L, -1) != LUA_TSTRING)
-            luaL_error(L, "Expected %s to be a string", name);
-        x = lua_tostring(L, -1);
-    }
-    lua_pop(L, 1);
-    return x;
-}
-
-
-/**
  * ### Lua callback functions
  *
  * We specify the initial conditions by providing the simulator
@@ -205,15 +158,26 @@ int run_sim(lua_State* L)
     if (n != 1 || !lua_istable(L, 1))
         luaL_error(L, "Argument must be a table");
 
-    double w = lget_number(L, "w", 2.0);
-    double h = lget_number(L, "h", w);
-    double cfl = lget_number(L, "cfl", 0.45);
-    double ftime = lget_number(L, "ftime", 0.01);
-    int nx = lget_int(L, "nx", 200);
-    int ny = lget_int(L, "ny", nx);
-    int vskip = lget_int(L, "vskip", 1);
-    int frames = lget_int(L, "frames", 50);
-    const char* fname = lget_string(L, "out", "sim.out");
+    lua_getfield(L, 1, "w");
+    lua_getfield(L, 1, "h");
+    lua_getfield(L, 1, "cfl");
+    lua_getfield(L, 1, "ftime");
+    lua_getfield(L, 1, "nx");
+    lua_getfield(L, 1, "ny");
+    lua_getfield(L, 1, "vskip");
+    lua_getfield(L, 1, "frames");
+    lua_getfield(L, 1, "out");
+
+    double w     = luaL_optnumber(L, 2, 2.0);
+    double h     = luaL_optnumber(L, 3, w);
+    double cfl   = luaL_optnumber(L, 4, 0.45);
+    double ftime = luaL_optnumber(L, 5, 0.01);
+    int nx       = luaL_optinteger(L, 6, 200);
+    int ny       = luaL_optinteger(L, 7, nx);
+    int vskip    = luaL_optinteger(L, 8, 1);
+    int frames   = luaL_optinteger(L, 9, 50);
+    const char* fname = luaL_optstring(L, 10, "sim.out");
+    lua_pop(L, 9);
 
     central2d_t* sim = central2d_init(w,h, nx,ny,
                                       3, shallow2d_flux, shallow2d_speed, cfl);
