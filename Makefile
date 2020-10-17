@@ -1,11 +1,11 @@
-SRC=src-c
+PLATFORM=gcc
+SRC=src
 PYTHON=python
 
-.PHONY: src-c/lshallow
-.PHONY: src-c++/lshallow
+.PHONY: src/lshallow
 
 $(SRC)/lshallow:
-	( cd $(SRC) ; make )
+	( cd $(SRC) ; make PLATFORM=$(PLATFORM) )
 
 # ===
 # Run small or big version
@@ -48,7 +48,7 @@ shallow.pdf: doc/jt-scheme.md $(SRC)/shallow.md
 
 .PHONY: $(SRC)/shallow.md
 $(SRC)/shallow.md:
-	( cd $(SRC) ; make shallow.md )
+	( cd $(SRC) ; make PLATFORM=$(PLATFORM) shallow.md )
 
 # ===
 # Clean up
@@ -57,7 +57,6 @@ $(SRC)/shallow.md:
 clean:
 	rm -f lshallow
 	rm -f dam_break.* wave.*
-	rm -f src-c/shallow.md src-c++/shallow.md
+	rm -f src/shallow.md
 	rm -f shallow.pdf
-	( cd src-c   ; make clean )
-	( cd src-c++ ; make clean )
+	( cd src; make PLATFORM=$(PLATFORM) clean )
