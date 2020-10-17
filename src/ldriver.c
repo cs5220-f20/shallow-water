@@ -68,11 +68,11 @@ void solution_check(central2d_t* sim)
  * single-precision raster pictures.
  */
 
-FILE* viz_open(const char* fname, central2d_t* sim)
+FILE* viz_open(const char* fname, central2d_t* sim, int vskip)
 {
     FILE* fp = fopen(fname, "w");
     if (fp) {
-        float xy[2] = {sim->nx, sim->ny};
+        float xy[2] = {sim->nx/vskip, sim->ny/vskip};
         fwrite(xy, sizeof(float), 2, fp);
     }
     return fp;
@@ -83,12 +83,14 @@ void viz_close(FILE* fp)
     fclose(fp);
 }
 
-void viz_frame(FILE* fp, central2d_t* sim)
+void viz_frame(FILE* fp, central2d_t* sim, int vskip)
 {
-    if (fp)
-        for (int iy = 0; iy < sim->ny; ++iy)
-            fwrite(sim->u + central2d_offset(sim,0,0,iy),
-                   sizeof(float), sim->nx, fp);
+    if (!fp)
+        return;
+    for (int iy = 0; iy < sim->ny; iy += vskip)
+        for (int ix = 0; ix < sim->nx; ix += vskip)
+            fwrite(sim->u + central2d_offset(sim,0,ix,iy),
+                   sizeof(float), 1, fp);
 }
 
 /**
@@ -209,6 +211,7 @@ int run_sim(lua_State* L)
     double ftime = lget_number(L, "ftime", 0.01);
     int nx = lget_int(L, "nx", 200);
     int ny = lget_int(L, "ny", nx);
+    int vskip = lget_int(L, "vskip", 1);
     int frames = lget_int(L, "frames", 50);
     const char* fname = lget_string(L, "out", "sim.out");
 
@@ -216,9 +219,9 @@ int run_sim(lua_State* L)
                                       3, shallow2d_flux, shallow2d_speed, cfl);
     lua_init_sim(L,sim);
     printf("%g %g %d %d %g %d %g\n", w, h, nx, ny, cfl, frames, ftime);
-    FILE* viz = viz_open(fname, sim);
+    FILE* viz = viz_open(fname, sim, vskip);
     solution_check(sim);
-    viz_frame(viz, sim);
+    viz_frame(viz, sim, vskip);
 
     double tcompute = 0;
     for (int i = 0; i < frames; ++i) {
@@ -240,7 +243,7 @@ int run_sim(lua_State* L)
         solution_check(sim);
         tcompute += elapsed;
         printf("  Time: %e (%e for %d steps)\n", elapsed, elapsed/nstep, nstep);
-        viz_frame(viz, sim);
+        viz_frame(viz, sim, vskip);
     }
     printf("Total compute time: %e\n", tcompute);
 
