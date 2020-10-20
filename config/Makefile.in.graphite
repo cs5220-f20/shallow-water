@@ -1,0 +1,18 @@
+# C compiler and flags
+CC=gcc
+CFLAGS=-g
+
+# Optimization flags
+OPTFLAGS=-O3 -march=native -fopenmp -ffast-math
+CFLAGS+=$(OPTFLAGS)
+CXXFLAGS+=$(OPTFLAGS)
+
+# Python
+PYTHON=python
+
+# Lua front-end
+LUA_CFLAGS=`pkg-config lua52 --cflags`
+LUA_LIBS=`pkg-config lua52 --libs`
+
+# Other necessary libraries
+LIBS=-fopenmp -lm
