@@ -25,8 +25,8 @@
  * where
  * $$
  *   U = \begin{bmatrix} h \\ hu \\ hv \end{bmatrix},
- *   F = \begin{bmatrix} hu \\ h^2 u + gh^2/2 \\ huv \end{bmatrix}
- *   G = \begin{bmatrix} hv \\ huv \\ h^2 v + gh^2/2 \end{bmatrix}
+ *   F = \begin{bmatrix} hu \\ hu^2 + gh^2/2 \\ huv \end{bmatrix}
+ *   G = \begin{bmatrix} hv \\ huv \\ hv^2 + gh^2/2 \end{bmatrix}
  * $$
  * The functions $F$ and $G$ are called *fluxes*, and describe how the
  * conserved quantities (volume and momentum) enter and exit a region
