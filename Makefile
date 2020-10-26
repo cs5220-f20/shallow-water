@@ -1,11 +1,10 @@
 PLATFORM=gcc
-SRC=src
-PYTHON=python
+include config/Makefile.in.$(PLATFORM)
 
 .PHONY: src/lshallow
 
-$(SRC)/lshallow:
-	( cd $(SRC) ; make PLATFORM=$(PLATFORM) )
+src/lshallow:
+	( cd src ; make PLATFORM=$(PLATFORM) )
 
 # ===
 # Run small or big version
@@ -13,8 +12,8 @@ $(SRC)/lshallow:
 .PHONY: run big
 run: dam_break.gif
 
-big: $(SRC)/lshallow
-	$(SRC)/lshallow tests.lua dam 1000
+big: src/lshallow
+	src/lshallow tests.lua dam 1000
 
 # ===
 # Generate visualizations (animated GIF or MP4)
@@ -34,21 +33,21 @@ wave.mp4: wave.out
 # ===
 # Generate output files
 
-dam_break.out: $(SRC)/lshallow
-	$(SRC)/lshallow tests.lua dam
+dam_break.out: src/lshallow
+	src/lshallow tests.lua dam
 
-wave.out: $(SRC)/lshallow
-	$(SRC)/lshallow tests.lua wave
+wave.out: src/lshallow
+	src/lshallow tests.lua wave
 
 # ===
 # Generate documentation
 
-shallow.pdf: doc/jt-scheme.md $(SRC)/shallow.md
+shallow.pdf: doc/jt-scheme.md src/shallow.md
 	pandoc --toc $^ -o $@
 
-.PHONY: $(SRC)/shallow.md
-$(SRC)/shallow.md:
-	( cd $(SRC) ; make PLATFORM=$(PLATFORM) shallow.md )
+.PHONY: src/shallow.md
+src/shallow.md:
+	( cd src ; make PLATFORM=$(PLATFORM) shallow.md )
 
 # ===
 # Clean up
